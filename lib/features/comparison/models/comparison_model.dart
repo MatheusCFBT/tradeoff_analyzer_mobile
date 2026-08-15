@@ -1,6 +1,7 @@
 class ComparisonModel {
   final String id;
   final String userId;
+  final bool isDone;
   final String topic;
   final List<ArgumentModel> pros;
   final List<ArgumentModel> cons;
