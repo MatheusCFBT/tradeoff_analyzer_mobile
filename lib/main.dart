@@ -7,5 +7,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await registerDependencies();
-  runApp(ComparisonStartPage(viewModel: GetIt.instance.get()));
+  runApp(
+    MaterialApp(home: ComparisonStartPage(viewModel: GetIt.instance.get())),
+  );
 }
