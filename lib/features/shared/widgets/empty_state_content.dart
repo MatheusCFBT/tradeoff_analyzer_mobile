@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class EmptyStateContent extends StatelessWidget {
   const EmptyStateContent({
-    this.icon,
+    this.circleAvatar,
     required this.title,
     required this.description,
     this.action,
     super.key,
   });
 
-  final Widget? icon;
+  final Widget? circleAvatar;
   final String title;
   final String description;
   final Widget? action;
@@ -20,13 +20,10 @@ class EmptyStateContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CircleAvatar(
-          radius: 34,
-            backgroundColor: const Color(0xFFEAF5FC),
-          child: icon ??
-              const Icon(Icons.balance, size: 32, color: Color(0xFF245B6B)),
-        ),
-        const SizedBox(height: 24),
+        if (circleAvatar != null) ...[
+          circleAvatar!,
+          const SizedBox(height: 24),
+        ],
         Text(
           title,
           style: const TextStyle(
@@ -50,10 +47,7 @@ class EmptyStateContent extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
-        if (action != null) ...[
-          const SizedBox(height: 24),
-          action!,
-        ],
+        if (action != null) ...[const SizedBox(height: 24), action!],
       ],
     );
   }

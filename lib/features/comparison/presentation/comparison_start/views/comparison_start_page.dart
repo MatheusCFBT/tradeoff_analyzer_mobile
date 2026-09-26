@@ -5,10 +5,7 @@ import 'package:tradeoff_analyzer_mobile/features/shared/widgets/empty_state_con
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/primary_button.dart';
 
 class ComparisonStartPage extends StatefulWidget {
-  const ComparisonStartPage({
-    required this.viewModel,
-    super.key
-  });
+  const ComparisonStartPage({required this.viewModel, super.key});
 
   final ComparisonStartViewModel viewModel;
 
@@ -26,6 +23,11 @@ class _ComparisonStartPageState extends State<StatefulWidget> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 440),
             child: EmptyStateContent(
+              circleAvatar: const CircleAvatar(
+                radius: 80,
+                backgroundColor: Color(0xFFEAF5FC),
+                child: Icon(Icons.balance, size: 75, color: Color(0xFF245B6B)),
+              ),
               title: 'Comece sua primeira decisão',
               description:
                   'Iniciar uma comparação ajudará você a organizar prós e contras, reduzindo o esforço mental e trazendo clareza objetiva.',
