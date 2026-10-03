@@ -3,8 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/viewmodels/comparison_start_viewmodel.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_header.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/repositories/comparison_repository_interface.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_progress_bar.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/empty_state_content.dart';
 
 void main() {
@@ -73,8 +75,20 @@ void main() {
       ),
     );
 
+    expect(find.byType(AppProgressBar), findsOneWidget);
+    expect(
+      tester.widget<AppProgressBar>(find.byType(AppProgressBar)).value,
+      0.25,
+    );
+    expect(find.byType(AppHeader), findsOneWidget);
     expect(find.byType(Card), findsOneWidget);
     expect(find.text('Sobre o que é esta decisão?'), findsOneWidget);
+    expect(
+      find.text(
+        'Defina o tema principal para começar a organizar seus pensamentos.',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Tema da Decisão'), findsOneWidget);
     expect(
       find.text('Ex: Mudar de carreira, Comprar um carro...'),
@@ -97,7 +111,9 @@ void main() {
     expect(submittedTheme, 'Mudar de carreira');
   });
 
-  testWidgets('opens the decision theme page from the start page', (tester) async {
+  testWidgets('opens the decision theme page from the start page', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: ComparisonStartPage(
@@ -115,6 +131,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Sobre o que é esta decisão?'), findsOneWidget);
+
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sobre o que é esta decisão?'), findsNothing);
+    expect(find.text('Comece sua primeira decisão'), findsOneWidget);
   });
 }
 
