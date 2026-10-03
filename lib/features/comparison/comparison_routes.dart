@@ -1,3 +1,4 @@
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_arguments/viewmodels/comparison_arguments_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_arguments/views/comparison_arguments_page.dart';
@@ -42,7 +43,10 @@ class ComparisonRoutes {
   static Route<dynamic> argumentsRoute({required String theme}) {
     return MaterialPageRoute<void>(
       settings: const RouteSettings(name: arguments),
-      builder: (_) => ComparisonArgumentsPage(theme: theme),
+      builder: (_) => ComparisonArgumentsPage(
+        theme: theme,
+        viewModel: GetIt.instance.get<ComparisonArgumentsViewModel>(),
+      ),
     );
   }
 }
