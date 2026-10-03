@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_header.dart';
 
-class BaseScaffold extends StatelessWidget {
-  const BaseScaffold({
+class AppBaseScaffold extends StatelessWidget {
+  const AppBaseScaffold({
     required this.body,
     this.header,
     this.showHeader = true,
