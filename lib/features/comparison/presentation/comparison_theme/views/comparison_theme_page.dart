@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
+import 'package:tradeoff_analyzer_mobile/routers/app_router.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_card.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
@@ -36,7 +37,14 @@ class _ComparisonThemePageState extends State<ComparisonThemePage> {
     }
 
     final theme = _themeController.text.trim();
-    widget.onContinue?.call(theme);
+    if (widget.onContinue != null) {
+      widget.onContinue!(theme);
+      return;
+    }
+
+    Navigator.of(context).push(
+      AppRouter.comparisonArgumentsRoute(theme: theme),
+    );
   }
 
   @override

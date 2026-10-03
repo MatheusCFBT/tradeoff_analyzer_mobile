@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tradeoff_analyzer_mobile/dependency_injection/dependency_injection.dart';
+import 'package:tradeoff_analyzer_mobile/routers/app_router.dart';
+import 'package:tradeoff_analyzer_mobile/routers/app_routes.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/viewmodels/comparison_start_viewmodel.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
@@ -167,6 +171,34 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Sobre o que é esta decisão?'), findsNothing);
+    expect(find.text('Comece sua primeira decisão'), findsOneWidget);
+  });
+
+  testWidgets('routes are centralized in the app and feature routers', (
+    tester,
+  ) async {
+    await registerDependencies();
+
+    expect(AppRoutes.home, '/');
+    expect(AppRoutes.comparisonTheme, '/comparison/theme');
+    expect(AppRoutes.comparisonArguments, '/comparison/arguments');
+    expect(ComparisonRoutes.theme, '/comparison/theme');
+    expect(ComparisonRoutes.arguments, '/comparison/arguments');
+
+    final route = AppRouter.onGenerateRoute(
+      const RouteSettings(name: AppRoutes.comparisonTheme),
+    );
+
+    expect(route, isA<MaterialPageRoute>());
+    expect(route.settings.name, AppRoutes.comparisonTheme);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        onGenerateRoute: AppRouter.onGenerateRoute,
+        initialRoute: AppRoutes.home,
+      ),
+    );
+
     expect(find.text('Comece sua primeira decisão'), findsOneWidget);
   });
 
