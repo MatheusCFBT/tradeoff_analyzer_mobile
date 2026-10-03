@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/viewmodels/comparison_start_viewmodel.dart';
-import 'package:tradeoff_analyzer_mobile/features/shared/widgets/base_scaffold.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/empty_state_content.dart';
-import 'package:tradeoff_analyzer_mobile/features/shared/widgets/primary_button.dart';
 
 class ComparisonStartPage extends StatefulWidget {
   const ComparisonStartPage({required this.viewModel, super.key});
@@ -16,7 +17,7 @@ class ComparisonStartPage extends StatefulWidget {
 class _ComparisonStartPageState extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
+    return AppBaseScaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
@@ -31,10 +32,26 @@ class _ComparisonStartPageState extends State<StatefulWidget> {
               title: 'Comece sua primeira decisão',
               description:
                   'Iniciar uma comparação ajudará você a organizar prós e contras, reduzindo o esforço mental e trazendo clareza objetiva.',
-              action: PrimaryButton(
+              action: AppPrimaryButton(
                 icon: const Icon(Icons.add, size: 18, color: Colors.white),
                 label: 'Nova comparação',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const ComparisonThemePage(
+                        circleAvatar: CircleAvatar(
+                          radius: 32,
+                          backgroundColor: Color(0xFFEAF5FC),
+                          child: Icon(
+                            Icons.psychology_outlined,
+                            size: 32,
+                            color: Color(0xFF245B6B),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),

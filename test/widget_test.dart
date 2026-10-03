@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/viewmodels/comparison_start_viewmodel.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/repositories/comparison_repository_interface.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/empty_state_content.dart';
-import 'package:tradeoff_analyzer_mobile/features/shared/widgets/primary_button.dart';
 
 void main() {
   testWidgets('shows the start comparison content without a card', (
@@ -29,11 +30,11 @@ void main() {
     expect(buttonLabel.style?.color, Colors.white);
   });
 
-  testWidgets('PrimaryButton accepts a custom text color', (tester) async {
+  testWidgets('AppPrimaryButton accepts a custom text color', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
-          body: PrimaryButton(
+          body: AppPrimaryButton(
             label: 'Custom color',
             onPressed: null,
             textColor: Colors.red,
@@ -58,6 +59,62 @@ void main() {
     );
 
     expect(find.byType(CircleAvatar), findsNothing);
+  });
+
+  testWidgets('shows and validates the decision theme card', (tester) async {
+    String? submittedTheme;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ComparisonThemePage(
+          circleAvatar: const CircleAvatar(),
+          onContinue: (theme) => submittedTheme = theme,
+        ),
+      ),
+    );
+
+    expect(find.byType(Card), findsOneWidget);
+    expect(find.text('Sobre o que é esta decisão?'), findsOneWidget);
+    expect(find.text('Tema da Decisão'), findsOneWidget);
+    expect(
+      find.text('Ex: Mudar de carreira, Comprar um carro...'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Seja claro e objetivo para facilitar a análise.'),
+      findsOneWidget,
+    );
+    expect(find.text('Continuar'), findsOneWidget);
+
+    await tester.tap(find.text('Continuar'));
+    await tester.pump();
+    expect(find.text('Informe o tema da decisão.'), findsOneWidget);
+    expect(submittedTheme, isNull);
+
+    await tester.enterText(find.byType(TextFormField), 'Mudar de carreira');
+    await tester.tap(find.text('Continuar'));
+    await tester.pump();
+    expect(submittedTheme, 'Mudar de carreira');
+  });
+
+  testWidgets('opens the decision theme page from the start page', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ComparisonStartPage(
+          viewModel: ComparisonStartViewModel(
+            repository: _FakeComparisonRepository(),
+          ),
+        ),
+      ),
+    );
+
+    final startButton = tester.widget<AppPrimaryButton>(
+      find.byType(AppPrimaryButton),
+    );
+    startButton.onPressed!();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sobre o que é esta decisão?'), findsOneWidget);
   });
 }
 

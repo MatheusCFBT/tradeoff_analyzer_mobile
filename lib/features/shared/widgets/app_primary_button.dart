@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PrimaryButton extends StatelessWidget {
-  const PrimaryButton({
+class AppPrimaryButton extends StatelessWidget {
+  const AppPrimaryButton({
     required this.label,
     required this.onPressed,
     this.icon,
