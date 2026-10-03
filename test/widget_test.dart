@@ -5,11 +5,42 @@ import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/compar
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_header.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/repositories/comparison_repository_interface.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_progress_bar.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/empty_state_content.dart';
 
 void main() {
+  testWidgets('AppBaseScaffold shows progress only when enabled', (
+    tester,
+  ) async {
+    final progress = ValueNotifier<double>(0.25);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AppBaseScaffold(
+          body: const Text('Body'),
+          progress: progress,
+          showProgressBar: true,
+        ),
+      ),
+    );
+
+    final indicatorFinder = find.byType(LinearProgressIndicator);
+    expect(indicatorFinder, findsOneWidget);
+    expect(tester.widget<LinearProgressIndicator>(indicatorFinder).value, 0.25);
+
+    progress.value = 0.5;
+    await tester.pump();
+    expect(tester.widget<LinearProgressIndicator>(indicatorFinder).value, 0.5);
+
+    await tester.pumpWidget(
+      MaterialApp(home: AppBaseScaffold(body: const Text('Body'))),
+    );
+    expect(indicatorFinder, findsNothing);
+    progress.dispose();
+  });
+
   testWidgets('shows the start comparison content without a card', (
     tester,
   ) async {
@@ -138,6 +169,65 @@ void main() {
     expect(find.text('Sobre o que é esta decisão?'), findsNothing);
     expect(find.text('Comece sua primeira decisão'), findsOneWidget);
   });
+
+  testWidgets(
+    'continues to the arguments page with the entered decision theme',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ComparisonStartPage(
+            viewModel: ComparisonStartViewModel(
+              repository: _FakeComparisonRepository(),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Nova comparação'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextFormField), 'Mudança de Carreira');
+      await tester.tap(find.text('Continuar'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Decisão Atual'), findsOneWidget);
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+      final progressBar = tester.widget<LinearProgressIndicator>(
+        find.byType(LinearProgressIndicator),
+      );
+      expect(progressBar.value, 0.5);
+      expect(progressBar.minHeight, 3);
+      expect(find.text('Mudança de Carreira'), findsOneWidget);
+      expect(find.text('Adicionar Argumento Favorável'), findsOneWidget);
+      expect(find.text('O que pesa a favor dessa decisão?'), findsOneWidget);
+      expect(
+        find.text('Ex: Melhor salário, Novos desafios...'),
+        findsOneWidget,
+      );
+
+      final backButton = tester.widget<TextButton>(find.byType(TextButton));
+      final backButtonSize = tester.getSize(find.byType(TextButton));
+      final nextButtonSize = tester.getSize(find.byType(ElevatedButton));
+      expect(backButtonSize.width, nextButtonSize.width);
+      expect(backButtonSize.height, nextButtonSize.height);
+      expect(backButton.style?.side, isNull);
+
+      await tester.tap(find.text('Próximo Passo'));
+      await tester.pumpAndSettle();
+      expect(find.text('Decisão Atual'), findsOneWidget);
+
+      await tester.tap(find.text('Voltar'));
+      await tester.pumpAndSettle();
+      expect(find.text('Sobre o que é esta decisão?'), findsOneWidget);
+      expect(
+        tester.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator)).value,
+        0.25,
+      );
+      expect(
+        tester.widget<TextFormField>(find.byType(TextFormField)).controller?.text,
+        'Mudança de Carreira',
+      );
+    },
+  );
 }
 
 class _FakeComparisonRepository implements IComparisonRepository {

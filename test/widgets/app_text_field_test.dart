@@ -31,4 +31,27 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     controller.dispose();
   });
+
+  testWidgets('supports a custom decoration without a visible label', (
+    tester,
+  ) async {
+    const decoration = InputDecoration(
+      hintText: 'Digite um argumento',
+      filled: true,
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: AppTextField(label: null, decoration: decoration)),
+      ),
+    );
+
+    expect(find.text('Digite um argumento'), findsOneWidget);
+    expect(find.text('Tema da Decisão'), findsNothing);
+    final renderedDecoration = tester
+        .widget<InputDecorator>(find.byType(InputDecorator))
+        .decoration;
+    expect(renderedDecoration.hintText, decoration.hintText);
+    expect(renderedDecoration.filled, isTrue);
+  });
 }

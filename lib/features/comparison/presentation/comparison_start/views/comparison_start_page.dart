@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/viewmodels/comparison_start_viewmodel.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_arguments/views/comparison_arguments_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
@@ -38,7 +39,7 @@ class _ComparisonStartPageState extends State<StatefulWidget> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) => const ComparisonThemePage(
+                      builder: (_) => ComparisonThemePage(
                         circleAvatar: CircleAvatar(
                           radius: 32,
                           backgroundColor: Color(0xFFEAF5FC),
@@ -48,6 +49,14 @@ class _ComparisonStartPageState extends State<StatefulWidget> {
                             color: Color(0xFF245B6B),
                           ),
                         ),
+                        onContinue: (theme) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  ComparisonArgumentsPage(theme: theme),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   );

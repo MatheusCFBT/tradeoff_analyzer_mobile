@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_card.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
-import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_progress_bar.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 
 class ComparisonThemePage extends StatefulWidget {
@@ -22,10 +21,12 @@ class ComparisonThemePage extends StatefulWidget {
 class _ComparisonThemePageState extends State<ComparisonThemePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _themeController = TextEditingController();
+  final ValueNotifier<double> _progress = ValueNotifier<double>(0.25);
 
   @override
   void dispose() {
     _themeController.dispose();
+    _progress.dispose();
     super.dispose();
   }
 
@@ -41,16 +42,13 @@ class _ComparisonThemePageState extends State<ComparisonThemePage> {
   @override
   Widget build(BuildContext context) {
     return AppBaseScaffold(
+      progress: _progress,
+      showProgressBar: true,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const AppProgressBar(
-              value: 0.25,
-              height: 3,
-              semanticLabel: 'Progresso da comparação',
-            ),
             const SizedBox(height: 8),
             Expanded(
               child: Center(
