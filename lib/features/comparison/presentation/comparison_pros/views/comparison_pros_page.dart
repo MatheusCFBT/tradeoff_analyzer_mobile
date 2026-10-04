@@ -35,7 +35,7 @@ class _ComparisonProsPageState extends State<ComparisonProsPage> {
 
   void _refresh() => setState(() {});
 
-  void _submit(String value) {
+  void _submitPro(String value) {
     if (_viewModel.addPro(value)) {
       _controller.clear();
       _focusNode.requestFocus();
@@ -72,12 +72,12 @@ class _ComparisonProsPageState extends State<ComparisonProsPage> {
                     onNext: () {},
                   ),
                   const SizedBox(height: 18),
-                  _CurrentDecisionHeader(theme: widget.theme),
+                  _CurrentDecisionMainCard(theme: widget.theme),
                   const SizedBox(height: 36),
                   _AddProCard(
                     controller: _controller,
                     focusNode: _focusNode,
-                    onSubmitted: _submit,
+                    onSubmitted: _submitPro,
                   ),
                   const SizedBox(height: 32),
                   _AddedProsSection(pros: _viewModel.pros),
@@ -160,8 +160,8 @@ class _ProsNavigation extends StatelessWidget {
   }
 }
 
-class _CurrentDecisionHeader extends StatelessWidget {
-  const _CurrentDecisionHeader({required this.theme});
+class _CurrentDecisionMainCard extends StatelessWidget {
+  const _CurrentDecisionMainCard({required this.theme});
   final String theme;
   @override
   Widget build(BuildContext context) {
