@@ -40,7 +40,7 @@ class _ComparisonStartPageState extends State<StatefulWidget> {
                     AppRouter.comparisonThemeRoute(
                       onContinue: (theme) {
                         Navigator.of(context).push(
-                          AppRouter.comparisonArgumentsRoute(theme: theme),
+                          AppRouter.comparisonProsRoute(theme: theme),
                         );
                       },
                     ),

@@ -181,9 +181,9 @@ void main() {
 
     expect(AppRoutes.home, '/');
     expect(AppRoutes.comparisonTheme, '/comparison/theme');
-    expect(AppRoutes.comparisonArguments, '/comparison/arguments');
+    expect(AppRoutes.comparisonPros, '/comparison/pros');
     expect(ComparisonRoutes.theme, '/comparison/theme');
-    expect(ComparisonRoutes.arguments, '/comparison/arguments');
+    expect(ComparisonRoutes.pros, '/comparison/pros');
 
     final route = AppRouter.onGenerateRoute(
       const RouteSettings(name: AppRoutes.comparisonTheme),
@@ -203,7 +203,7 @@ void main() {
   });
 
   testWidgets(
-    'continues to the arguments page with the entered decision theme',
+    'continues to the pros page with the entered decision theme',
     (tester) async {
       await tester.pumpWidget(
         MaterialApp(

@@ -1,7 +1,7 @@
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_arguments/viewmodels/comparison_arguments_viewmodel.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/viewmodels/comparison_pros_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_arguments/views/comparison_arguments_page.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/views/comparison_pros_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/viewmodels/comparison_start_viewmodel.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
@@ -9,7 +9,7 @@ import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/compar
 class ComparisonRoutes {
   static const String start = '/comparison/start';
   static const String theme = '/comparison/theme';
-  static const String arguments = '/comparison/arguments';
+  static const String pros = '/comparison/pros';
 
   static Route<dynamic> startRoute() {
     return MaterialPageRoute<void>(
@@ -40,12 +40,12 @@ class ComparisonRoutes {
     );
   }
 
-  static Route<dynamic> argumentsRoute({required String theme}) {
+  static Route<dynamic> prosRoute({required String theme}) {
     return MaterialPageRoute<void>(
-      settings: const RouteSettings(name: arguments),
-      builder: (_) => ComparisonArgumentsPage(
+      settings: const RouteSettings(name: pros),
+      builder: (_) => ComparisonProsPage(
         theme: theme,
-        viewModel: GetIt.instance.get<ComparisonArgumentsViewModel>(),
+        viewModel: GetIt.instance.get<ComparisonProsViewModel>(),
       ),
     );
   }

@@ -4,6 +4,9 @@ class AppTextField extends StatelessWidget {
   const AppTextField({
     this.label,
     this.controller,
+    this.focusNode,
+    this.onFieldSubmitted,
+    this.onEditingComplete,
     this.hintText,
     this.helperText,
     this.decoration,
@@ -16,6 +19,9 @@ class AppTextField extends StatelessWidget {
     super.key,
   });
 
+  final FocusNode? focusNode;
+  final ValueChanged<String>? onFieldSubmitted;
+  final VoidCallback? onEditingComplete;
   final String? label;
   final TextEditingController? controller;
   final String? hintText;
@@ -47,6 +53,9 @@ class AppTextField extends StatelessWidget {
         ],
         TextFormField(
           controller: controller,
+          focusNode: focusNode,
+          onFieldSubmitted: onFieldSubmitted,
+          onEditingComplete: onEditingComplete,
           textInputAction: textInputAction,
           keyboardType: keyboardType,
           enabled: enabled,

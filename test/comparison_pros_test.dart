@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_arguments/views/comparison_arguments_page.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/views/comparison_pros_page.dart';
 
 void main() {
   Future<void> openPage(WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: ComparisonArgumentsPage(theme: 'Mudar de carreira'),
+        home: ComparisonProsPage(theme: 'Mudar de carreira'),
       ),
     );
   }
 
   Future<void> submit(WidgetTester tester, String text) async {
-    await tester.enterText(find.byType(TextField), text);
+    await tester.enterText(find.byType(AppTextField), text);
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
   }
@@ -26,12 +27,12 @@ void main() {
     await submit(tester, '  Melhor salário  ');
     expect(find.text('Melhor salário'), findsOneWidget);
     expect(find.text('1 Item'), findsOneWidget);
-    final field = tester.widget<TextField>(find.byType(TextField));
+    final field = tester.widget<AppTextField>(find.byType(AppTextField));
     expect(field.controller!.text, isEmpty);
     expect(field.focusNode!.hasFocus, isTrue);
     expect(
       tester.getTopLeft(find.text('Melhor salário')).dy,
-      greaterThan(tester.getTopLeft(find.byType(TextField)).dy),
+      greaterThan(tester.getTopLeft(find.byType(AppTextField)).dy),
     );
     await submit(tester, 'Flexibilidade');
     await submit(tester, 'Melhor salário');
@@ -43,7 +44,7 @@ void main() {
     );
   });
 
-  testWidgets('ignores empty arguments', (tester) async {
+  testWidgets('ignores empty pros', (tester) async {
     await openPage(tester);
     await submit(tester, '');
     await submit(tester, '   ');

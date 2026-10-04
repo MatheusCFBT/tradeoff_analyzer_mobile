@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
-class ComparisonArgumentsViewModel extends ChangeNotifier {
+class ComparisonProsViewModel extends ChangeNotifier {
   final List<String> _pros = [];
 
   List<String> get pros => List.unmodifiable(_pros);
 
-  bool addArgument(String value) {
+  bool addPro(String value) {
     final argument = value.trim();
     if (argument.isEmpty) return false;
     _pros.add(argument);

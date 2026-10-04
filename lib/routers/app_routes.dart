@@ -4,5 +4,5 @@ class AppRoutes {
   static const String home = '/';
   static const String comparisonStart = ComparisonRoutes.start;
   static const String comparisonTheme = ComparisonRoutes.theme;
-  static const String comparisonArguments = ComparisonRoutes.arguments;
+  static const String comparisonPros = ComparisonRoutes.pros;
 }

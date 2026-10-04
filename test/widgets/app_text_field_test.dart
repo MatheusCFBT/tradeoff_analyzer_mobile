@@ -3,6 +3,33 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 
 void main() {
+  testWidgets('forwards focus and keyboard completion callbacks', (
+    tester,
+  ) async {
+    final focus = FocusNode();
+    final events = <String>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AppTextField(
+            focusNode: focus,
+            textInputAction: TextInputAction.done,
+            onEditingComplete: () => events.add('complete'),
+            onFieldSubmitted: (value) => events.add(value),
+          ),
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextFormField), 'Melhor salário');
+    expect(focus.hasFocus, isTrue);
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    expect(events, ['complete', 'Melhor salário']);
+    expect(focus.hasFocus, isTrue);
+    await tester.pumpWidget(const SizedBox.shrink());
+    focus.dispose();
+  });
+
   testWidgets('shows standardized text and updates the supplied controller', (
     tester,
   ) async {

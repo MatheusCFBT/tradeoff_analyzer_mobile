@@ -12,8 +12,8 @@ class AppRouter {
     return ComparisonRoutes.themeRoute(onContinue: onContinue);
   }
 
-  static Route<dynamic> comparisonArgumentsRoute({required String theme}) {
-    return ComparisonRoutes.argumentsRoute(theme: theme);
+  static Route<dynamic> comparisonProsRoute({required String theme}) {
+    return ComparisonRoutes.prosRoute(theme: theme);
   }
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -30,17 +30,17 @@ class AppRouter {
             }
 
             Navigator.of(context).push(
-              comparisonArgumentsRoute(theme: theme),
+              comparisonProsRoute(theme: theme),
             );
           },
         );
-      case AppRoutes.comparisonArguments:
+      case AppRoutes.comparisonPros:
         final theme = settings.arguments;
         if (theme is! String || theme.trim().isEmpty) {
           return _errorRoute();
         }
 
-        return comparisonArgumentsRoute(theme: theme);
+        return comparisonProsRoute(theme: theme);
       default:
         return _errorRoute();
     }
