@@ -9,7 +9,6 @@ Future<void> main() async {
   await registerDependencies();
   runApp(
     MaterialApp(
-      navigatorKey: AppRouter.navigatorKey,
       initialRoute: AppRoutes.home,
       onGenerateRoute: AppRouter.onGenerateRoute,
     ),
