@@ -48,64 +48,66 @@ class _ComparisonThemePageState extends State<ComparisonThemePage> {
             const SizedBox(height: 8),
             Expanded(
               child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 440),
-                  child: AppCard(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(child: widget.circleAvatar),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Sobre o que é esta decisão?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 28,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1F3C46),
+                child: SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 440),
+                    child: AppCard(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(child: widget.circleAvatar),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Sobre o que é esta decisão?',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 28,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF1F3C46),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Defina o tema principal para começar a organizar seus pensamentos.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 18,
-                              height: 1.45,
-                              color: Color(0xFF1F3C46),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Defina o tema principal para começar a organizar seus pensamentos.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 18,
+                                height: 1.45,
+                                color: Color(0xFF1F3C46),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          AppTextField(
-                            label: 'Tema da Decisão',
-                            controller: _themeController,
-                            textInputAction: TextInputAction.done,
-                            hintText:
-                                'Ex: Mudar de carreira, Comprar um carro...',
-                            helperText:
-                                'Seja claro e objetivo para facilitar a análise.',
-                            validator: (value) {
-                              if ((value ?? '').trim().isEmpty) {
-                                return 'Informe o tema da decisão.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: double.infinity,
-                            child: AppPrimaryButton(
-                              label: 'Continuar',
-                              onPressed: _handleContinue,
+                            const SizedBox(height: 16),
+                            AppTextField(
+                              label: 'Tema da Decisão',
+                              controller: _themeController,
+                              textInputAction: TextInputAction.done,
+                              hintText:
+                                  'Ex: Mudar de carreira, Comprar um carro...',
+                              helperText:
+                                  'Seja claro e objetivo para facilitar a análise.',
+                              validator: (value) {
+                                if ((value ?? '').trim().isEmpty) {
+                                  return 'Informe o tema da decisão.';
+                                }
+                                return null;
+                              },
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: double.infinity,
+                              child: AppPrimaryButton(
+                                label: 'Continuar',
+                                onPressed: _handleContinue,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/views/comparison_pros_page.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
+
+import 'comparison_test_app.dart';
 
 void main() {
+  setUpComparisonApp();
   Future<void> openPage(WidgetTester tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(home: ComparisonProsPage(theme: 'Mudar de carreira')),
-    );
+    await openPros(tester, 'Mudar de carreira');
   }
 
   Future<void> submit(WidgetTester tester, String text) async {
@@ -33,6 +33,7 @@ void main() {
       greaterThan(tester.getTopLeft(find.byType(AppTextField)).dy),
     );
     await submit(tester, 'Flexibilidade');
+    expect(find.text('2 Itens'), findsOneWidget);
     await submit(tester, 'Melhor salário');
     expect(find.text('3 Itens'), findsOneWidget);
     expect(find.text('Melhor salário'), findsNWidgets(2));
@@ -53,12 +54,7 @@ void main() {
   testWidgets('scrolls long lists on small screens with keyboard open', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(320, 600);
-    tester.view.devicePixelRatio = 1;
-    tester.view.viewInsets = const FakeViewPadding(bottom: 250);
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    addTearDown(tester.view.resetViewInsets);
+    setViewport(tester, const Size(320, 600), keyboardHeight: 250);
     await openPage(tester);
     for (var i = 0; i < 8; i++) {
       await submit(
@@ -68,6 +64,45 @@ void main() {
     }
     await tester.ensureVisible(find.text('8 Itens'));
     await tester.pumpAndSettle();
-    expect(find.text('8 Itens'), findsOneWidget);
+    expect(find.text('8 Itens').hitTestable(), findsOneWidget);
+    final lastPro = find.text(
+      'Argumento 7 com uma descrição longa que deve quebrar em várias linhas sem overflow.',
+    );
+    await tester.ensureVisible(lastPro);
+    await tester.pumpAndSettle();
+    expect(lastPro.hitTestable(), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('shows theme, progress and an empty list', (tester) async {
+    await openPage(tester);
+    expect(find.text('Decisão Atual'), findsOneWidget);
+    expect(find.text('Mudar de carreira'), findsOneWidget);
+    expect(find.text('Adicionar Argumento Favorável'), findsOneWidget);
+    expect(find.text('O que pesa a favor dessa decisão?'), findsOneWidget);
+    expect(find.text('Ex: Melhor salário, Novos desafios...'), findsOneWidget);
+    expect(find.text('Prós Adicionados'), findsOneWidget);
+    expect(find.text('0 Itens'), findsOneWidget);
+    expect(find.byIcon(Icons.check_circle), findsNothing);
+    expect(find.text('Voltar'), findsOneWidget);
+    expect(find.text('Próximo Passo'), findsOneWidget);
+    final backButton = tester.widget<TextButton>(find.byType(TextButton));
+    expect(
+      tester.getSize(find.byType(TextButton)),
+      tester.getSize(find.byType(ElevatedButton)),
+    );
+    expect(backButton.style?.side, isNull);
+    expect(
+      tester
+          .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator))
+          .minHeight,
+      3,
+    );
+    expect(
+      tester
+          .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator))
+          .value,
+      0.5,
+    );
   });
 }

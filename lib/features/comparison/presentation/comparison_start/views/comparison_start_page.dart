@@ -19,25 +19,34 @@ class _ComparisonStartPageState extends State<StatefulWidget> {
   Widget build(BuildContext context) {
     return AppBaseScaffold(
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 440),
-            child: EmptyStateContent(
-              circleAvatar: const CircleAvatar(
-                radius: 80,
-                backgroundColor: Color(0xFFEAF5FC),
-                child: Icon(Icons.balance, size: 75, color: Color(0xFF245B6B)),
-              ),
-              title: 'Comece sua primeira decisão',
-              description:
-                  'Iniciar uma comparação ajudará você a organizar prós e contras, reduzindo o esforço mental e trazendo clareza objetiva.',
-              action: AppPrimaryButton(
-                icon: const Icon(Icons.add, size: 18, color: Colors.white),
-                label: 'Nova comparação',
-                onPressed: () {
-                  Navigator.pushNamed(context, ComparisonRoutes.theme);
-                },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 32.0,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: EmptyStateContent(
+                circleAvatar: const CircleAvatar(
+                  radius: 80,
+                  backgroundColor: Color(0xFFEAF5FC),
+                  child: Icon(
+                    Icons.balance,
+                    size: 75,
+                    color: Color(0xFF245B6B),
+                  ),
+                ),
+                title: 'Comece sua primeira decisão',
+                description:
+                    'Iniciar uma comparação ajudará você a organizar prós e contras, reduzindo o esforço mental e trazendo clareza objetiva.',
+                action: AppPrimaryButton(
+                  icon: const Icon(Icons.add, size: 18, color: Colors.white),
+                  label: 'Nova comparação',
+                  onPressed: () {
+                    Navigator.pushNamed(context, ComparisonRoutes.theme);
+                  },
+                ),
               ),
             ),
           ),
