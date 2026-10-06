@@ -3,10 +3,9 @@ import 'package:tradeoff_analyzer_mobile/features/comparison/models/comparison_m
 import 'package:tradeoff_analyzer_mobile/features/comparison/repositories/comparison_repository_interface.dart';
 
 class ComparisonStartViewModel extends ChangeNotifier {
-  ComparisonStartViewModel({
-    required IComparisonRepository repository
-  }) : _repository = repository; 
-  
+  ComparisonStartViewModel({required IComparisonRepository repository})
+    : _repository = repository;
+
   final IComparisonRepository _repository;
 
   ComparisonModel? comparison;
@@ -16,15 +15,14 @@ class ComparisonStartViewModel extends ChangeNotifier {
 
   Future<void> startComparison() async {
     isLoading = true;
-    
+
     notifyListeners();
 
     try {
       final result = await _repository.startComparisonAsync();
       if (result.isSuccess) {
         comparison = result.getValueOrNull();
-      }
-      else {
+      } else {
         error = result.getErrorOrNull().toString();
       }
     } catch (e) {
@@ -33,11 +31,11 @@ class ComparisonStartViewModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }
-  } 
+  }
 
   // Future<ComparisonModel> getUndoneComparisons() async {
   //   isLoading = true;
-    
+
   //   notifyListeners();
 
   //   try {

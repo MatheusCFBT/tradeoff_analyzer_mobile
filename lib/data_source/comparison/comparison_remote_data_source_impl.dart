@@ -6,5 +6,4 @@ class ComparisonRemoteDataSource extends IComparisonRemoteDataSource {
     // TODO: implement startComparison
     throw UnimplementedError();
   }
-  
 }

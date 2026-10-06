@@ -39,9 +39,9 @@ class _ComparisonStartPageState extends State<StatefulWidget> {
                   Navigator.of(context).push(
                     AppRouter.comparisonThemeRoute(
                       onContinue: (theme) {
-                        Navigator.of(context).push(
-                          AppRouter.comparisonProsRoute(theme: theme),
-                        );
+                        Navigator.of(
+                          context,
+                        ).push(AppRouter.comparisonProsRoute(theme: theme));
                       },
                     ),
                   );

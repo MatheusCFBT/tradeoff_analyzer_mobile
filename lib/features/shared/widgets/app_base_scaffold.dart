@@ -28,13 +28,11 @@ class AppBaseScaffold extends StatelessWidget {
         child: Column(
           children: [
             if (showHeader)
-              header ?? const AppHeader(
-                leading: Icon(
-                  Icons.menu,
-                  color: Color(0xFF245B6B),
-                ),
-                onAvatarTap: null,
-              ),
+              header ??
+                  const AppHeader(
+                    leading: Icon(Icons.menu, color: Color(0xFF245B6B)),
+                    onAvatarTap: null,
+                  ),
             if (showProgressBar)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),

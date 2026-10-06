@@ -42,9 +42,7 @@ class _ComparisonThemePageState extends State<ComparisonThemePage> {
       return;
     }
 
-    Navigator.of(context).push(
-      AppRouter.comparisonProsRoute(theme: theme),
-    );
+    Navigator.of(context).push(AppRouter.comparisonProsRoute(theme: theme));
   }
 
   @override

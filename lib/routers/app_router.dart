@@ -29,9 +29,7 @@ class AppRouter {
               return;
             }
 
-            Navigator.of(context).push(
-              comparisonProsRoute(theme: theme),
-            );
+            Navigator.of(context).push(comparisonProsRoute(theme: theme));
           },
         );
       case AppRoutes.comparisonPros:
@@ -48,11 +46,8 @@ class AppRouter {
 
   static Route<dynamic> _errorRoute() {
     return MaterialPageRoute<void>(
-      builder: (_) => const Scaffold(
-        body: Center(
-          child: Text('Rota não encontrada'),
-        ),
-      ),
+      builder: (_) =>
+          const Scaffold(body: Center(child: Text('Rota não encontrada'))),
     );
   }
 }

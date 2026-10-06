@@ -9,7 +9,9 @@ sealed class ComparisonResult<T> extends Equatable {
   bool get isFailuer => this is ComparisonFailure;
 
   T? getValueOrNull() {
-    if (this is ComparisonSuccess<T>) return (this as ComparisonSuccess<T>).value;
+    if (this is ComparisonSuccess<T>) {
+      return (this as ComparisonSuccess<T>).value;
+    }
     return null;
   }
 
@@ -19,7 +21,7 @@ sealed class ComparisonResult<T> extends Equatable {
   }
 }
 
-final class ComparisonSuccess<T> extends ComparisonResult<T>{
+final class ComparisonSuccess<T> extends ComparisonResult<T> {
   const ComparisonSuccess(this.value);
 
   final T value;
@@ -35,4 +37,4 @@ final class ComparisonFailure extends ComparisonResult<Never> {
 
   @override
   List<Object?> get props => [error];
-} 
+}

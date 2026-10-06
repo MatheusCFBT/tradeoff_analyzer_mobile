@@ -30,7 +30,8 @@ class ArgumentModel {
   });
 }
 
-enum SelectedSide {//TODO VALIDAR ENUMS PARA MAIS CONDIZENTE COM O DOMINIO
+enum SelectedSide {
+  //TODO VALIDAR ENUMS PARA MAIS CONDIZENTE COM O DOMINIO
   undecided,
   pros,
   cons,

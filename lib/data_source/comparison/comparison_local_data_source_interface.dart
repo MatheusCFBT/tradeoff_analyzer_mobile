@@ -1,3 +1,1 @@
-abstract class IComparisonLocalDataSource {
-
-}
+abstract class IComparisonLocalDataSource {}
