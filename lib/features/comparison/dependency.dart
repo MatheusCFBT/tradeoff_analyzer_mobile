@@ -1,3 +1,4 @@
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/viewmodels/comparison_cons_viewmodel.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/viewmodels/comparison_pros_viewmodel.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tradeoff_analyzer_mobile/data_source/comparison/comparison_local_data_source_impl.dart';
@@ -12,6 +13,7 @@ void setupComparisonDependencies() {
   // TODO VERIFICAR SE É O MELHOR LIFETIME
   GetIt.instance
     ..registerFactory(() => ComparisonProsViewModel())
+    ..registerFactory(() => ComparisonConsViewModel())
     ..registerFactory<IComparisonRemoteDataSource>(
       () => ComparisonRemoteDataSource(),
     )
