@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
-import 'package:tradeoff_analyzer_mobile/routers/app_router.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_card.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 
 class ComparisonThemePage extends StatefulWidget {
-  const ComparisonThemePage({
-    required this.circleAvatar,
-    this.onContinue,
-    super.key,
-  });
+  const ComparisonThemePage({required this.circleAvatar, super.key});
 
   final CircleAvatar circleAvatar;
-  final void Function(String theme)? onContinue;
 
   @override
   State<ComparisonThemePage> createState() => _ComparisonThemePageState();
@@ -37,12 +32,7 @@ class _ComparisonThemePageState extends State<ComparisonThemePage> {
     }
 
     final theme = _themeController.text.trim();
-    if (widget.onContinue != null) {
-      widget.onContinue!(theme);
-      return;
-    }
-
-    Navigator.of(context).push(AppRouter.comparisonProsRoute(theme: theme));
+    Navigator.pushNamed(context, ComparisonRoutes.pros, arguments: theme);
   }
 
   @override

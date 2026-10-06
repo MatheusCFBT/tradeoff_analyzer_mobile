@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/views/comparison_pros_page.dart';
 import 'package:tradeoff_analyzer_mobile/dependency_injection/dependency_injection.dart';
 import 'package:tradeoff_analyzer_mobile/routers/app_router.dart';
 import 'package:tradeoff_analyzer_mobile/routers/app_routes.dart';
@@ -15,6 +17,22 @@ import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_progress_ba
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/empty_state_content.dart';
 
 void main() {
+  setUp(() async {
+    await GetIt.instance.reset();
+    await registerDependencies();
+  });
+  tearDown(() async => GetIt.instance.reset());
+
+  Future<void> openApp(WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        initialRoute: AppRoutes.home,
+        onGenerateRoute: AppRouter.onGenerateRoute,
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
   testWidgets('AppBaseScaffold shows progress only when enabled', (
     tester,
   ) async {
@@ -99,16 +117,13 @@ void main() {
   });
 
   testWidgets('shows and validates the decision theme card', (tester) async {
-    String? submittedTheme;
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: ComparisonThemePage(
-          circleAvatar: const CircleAvatar(),
-          onContinue: (theme) => submittedTheme = theme,
-        ),
-      ),
-    );
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(800, 800);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await openApp(tester);
+    await tester.tap(find.text('Nova comparação'));
+    await tester.pumpAndSettle();
 
     expect(find.byType(AppProgressBar), findsOneWidget);
     expect(
@@ -138,34 +153,28 @@ void main() {
     await tester.tap(find.text('Continuar'));
     await tester.pump();
     expect(find.text('Informe o tema da decisão.'), findsOneWidget);
-    expect(submittedTheme, isNull);
+    expect(find.byType(ComparisonProsPage), findsNothing);
+    expect(find.byType(ComparisonThemePage), findsOneWidget);
 
     await tester.enterText(find.byType(TextFormField), 'Mudar de carreira');
     await tester.tap(find.text('Continuar'));
-    await tester.pump();
-    expect(submittedTheme, 'Mudar de carreira');
+    await tester.pumpAndSettle();
+    expect(find.byType(ComparisonProsPage), findsOneWidget);
+    expect(find.text('Mudar de carreira'), findsOneWidget);
   });
 
   testWidgets('opens the decision theme page from the start page', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: ComparisonStartPage(
-          viewModel: ComparisonStartViewModel(
-            repository: _FakeComparisonRepository(),
-          ),
-        ),
-      ),
-    );
-
-    final startButton = tester.widget<AppPrimaryButton>(
-      find.byType(AppPrimaryButton),
-    );
-    startButton.onPressed!();
+    await openApp(tester);
+    await tester.tap(find.text('Nova comparação'));
     await tester.pumpAndSettle();
 
     expect(find.text('Sobre o que é esta decisão?'), findsOneWidget);
+    final settings = ModalRoute.of(
+      tester.element(find.byType(ComparisonThemePage)),
+    )!.settings;
+    expect(settings.name, ComparisonRoutes.theme);
 
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
@@ -174,53 +183,110 @@ void main() {
     expect(find.text('Comece sua primeira decisão'), findsOneWidget);
   });
 
-  testWidgets('routes are centralized in the app and feature routers', (
+  testWidgets('home preserves its named route settings', (tester) async {
+    await openApp(tester);
+    expect(find.text('Comece sua primeira decisão'), findsOneWidget);
+    expect(
+      ModalRoute.of(
+        tester.element(find.byType(ComparisonStartPage)),
+      )!.settings.name,
+      AppRoutes.home,
+    );
+  });
+
+  testWidgets('opens comparison start by name and preserves arguments', (
     tester,
   ) async {
-    await registerDependencies();
-
-    expect(AppRoutes.home, '/');
-    expect(AppRoutes.comparisonTheme, '/comparison/theme');
-    expect(AppRoutes.comparisonPros, '/comparison/pros');
-    expect(ComparisonRoutes.theme, '/comparison/theme');
-    expect(ComparisonRoutes.pros, '/comparison/pros');
-
-    final route = AppRouter.onGenerateRoute(
-      const RouteSettings(name: AppRoutes.comparisonTheme),
+    await openApp(tester);
+    final arguments = {'source': 'test'};
+    Navigator.pushNamed(
+      tester.element(find.byType(ComparisonStartPage)),
+      ComparisonRoutes.start,
+      arguments: arguments,
     );
+    await tester.pumpAndSettle();
+    final settings = ModalRoute.of(
+      tester.element(find.byType(ComparisonStartPage)),
+    )!.settings;
+    expect(settings.name, ComparisonRoutes.start);
+    expect(settings.arguments, same(arguments));
+  });
 
-    expect(route, isA<MaterialPageRoute>());
-    expect(route.settings.name, AppRoutes.comparisonTheme);
-
-    await tester.pumpWidget(
-      MaterialApp(
-        onGenerateRoute: AppRouter.onGenerateRoute,
-        initialRoute: AppRoutes.home,
-      ),
+  testWidgets('unknown route shows error and retains its settings', (
+    tester,
+  ) async {
+    await openApp(tester);
+    Navigator.pushNamed(
+      tester.element(find.byType(ComparisonStartPage)),
+      '/unknown',
+      arguments: 'original argument',
     );
+    await tester.pumpAndSettle();
+    expect(find.text('Rota não encontrada'), findsOneWidget);
+    final settings = ModalRoute.of(
+      tester.element(find.text('Rota não encontrada')),
+    )!.settings;
+    expect(settings.name, '/unknown');
+    expect(settings.arguments, 'original argument');
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.byType(ComparisonStartPage), findsOneWidget);
+  });
 
-    expect(find.text('Comece sua primeira decisão'), findsOneWidget);
+  for (final argument in <Object?>[null, 42, '', '   ']) {
+    testWidgets('rejects invalid pros argument: $argument', (tester) async {
+      await openApp(tester);
+      Navigator.pushNamed(
+        tester.element(find.byType(ComparisonStartPage)),
+        ComparisonRoutes.pros,
+        arguments: argument,
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Rota não encontrada'), findsOneWidget);
+      expect(find.byType(ComparisonProsPage), findsNothing);
+      final settings = ModalRoute.of(
+        tester.element(find.text('Rota não encontrada')),
+      )!.settings;
+      expect(settings.name, ComparisonRoutes.pros);
+      expect(settings.arguments, argument);
+    });
+  }
+
+  testWidgets('opens pros directly by name with a valid theme', (tester) async {
+    await openApp(tester);
+    Navigator.pushNamed(
+      tester.element(find.byType(ComparisonStartPage)),
+      ComparisonRoutes.pros,
+      arguments: 'Mudar de carreira',
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Mudar de carreira'), findsOneWidget);
+    final settings = ModalRoute.of(
+      tester.element(find.byType(ComparisonProsPage)),
+    )!.settings;
+    expect(settings.name, ComparisonRoutes.pros);
+    expect(settings.arguments, 'Mudar de carreira');
   });
 
   testWidgets('continues to the pros page with the entered decision theme', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: ComparisonStartPage(
-          viewModel: ComparisonStartViewModel(
-            repository: _FakeComparisonRepository(),
-          ),
-        ),
-      ),
-    );
+    await openApp(tester);
 
     await tester.tap(find.text('Nova comparação'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField), 'Mudança de Carreira');
+    await tester.enterText(
+      find.byType(TextFormField),
+      '  Mudança de Carreira  ',
+    );
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
 
+    final settings = ModalRoute.of(
+      tester.element(find.byType(ComparisonProsPage)),
+    )!.settings;
+    expect(settings.name, ComparisonRoutes.pros);
+    expect(settings.arguments, 'Mudança de Carreira');
     expect(find.text('Decisão Atual'), findsOneWidget);
     expect(find.byType(LinearProgressIndicator), findsOneWidget);
     final progressBar = tester.widget<LinearProgressIndicator>(
@@ -255,8 +321,12 @@ void main() {
     );
     expect(
       tester.widget<TextFormField>(find.byType(TextFormField)).controller?.text,
-      'Mudança de Carreira',
+      '  Mudança de Carreira  ',
     );
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.byType(ComparisonStartPage), findsOneWidget);
+    expect(find.byType(ComparisonThemePage), findsNothing);
   });
 }
 

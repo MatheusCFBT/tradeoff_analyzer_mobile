@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/viewmodels/comparison_start_viewmodel.dart';
-import 'package:tradeoff_analyzer_mobile/routers/app_router.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/empty_state_content.dart';
@@ -36,15 +36,7 @@ class _ComparisonStartPageState extends State<StatefulWidget> {
                 icon: const Icon(Icons.add, size: 18, color: Colors.white),
                 label: 'Nova comparação',
                 onPressed: () {
-                  Navigator.of(context).push(
-                    AppRouter.comparisonThemeRoute(
-                      onContinue: (theme) {
-                        Navigator.of(
-                          context,
-                        ).push(AppRouter.comparisonProsRoute(theme: theme));
-                      },
-                    ),
-                  );
+                  Navigator.pushNamed(context, ComparisonRoutes.theme);
                 },
               ),
             ),
