@@ -13,18 +13,18 @@ void setupComparisonDependencies() {
   GetIt.instance
     ..registerFactory(() => ComparisonProsViewModel())
     ..registerFactory<IComparisonRemoteDataSource>(
-      () => ComparisonRemoteDataSource()
+      () => ComparisonRemoteDataSource(),
     )
     ..registerLazySingleton<IComparisonLocalDataSource>(
-      () => ComparisonLocalDataSource()
+      () => ComparisonLocalDataSource(),
     )
     ..registerFactory<IComparisonRepository>(
       () => ComparisonRepository(
         localDataSource: GetIt.instance.get(),
-        dataSource: GetIt.instance.get()
-      )
+        dataSource: GetIt.instance.get(),
+      ),
     )
     ..registerFactory(
-      () => ComparisonStartViewModel(repository: GetIt.instance.get())
+      () => ComparisonStartViewModel(repository: GetIt.instance.get()),
     );
 }

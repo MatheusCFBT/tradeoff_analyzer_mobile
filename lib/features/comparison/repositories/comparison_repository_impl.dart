@@ -9,11 +9,9 @@ typedef LoanConsigAction<T> = Future<T> Function();
 class ComparisonRepository extends IComparisonRepository {
   ComparisonRepository({
     required IComparisonLocalDataSource localDataSource,
-    required IComparisonRemoteDataSource dataSource
-  }) :  _localDataSource = localDataSource,
-        _dataSource = dataSource;
+    required IComparisonRemoteDataSource dataSource,
+  }) : _dataSource = dataSource;
 
-  final IComparisonLocalDataSource _localDataSource;
   final IComparisonRemoteDataSource _dataSource;
 
   @override
@@ -25,12 +23,12 @@ class ComparisonRepository extends IComparisonRepository {
     try {
       final result = await action();
       return ComparisonSuccess(result);
-    } on FormatException catch (error, stackTrace) {
+    } on FormatException catch (error) {
       //TODO loggar
       return ComparisonFailure(error);
-    } catch (error, stackTrace) {
+    } catch (error) {
       return ComparisonFailure(error);
     }
-    // TODO Colocar exception de connection 
+    // TODO Colocar exception de connection
   }
 }

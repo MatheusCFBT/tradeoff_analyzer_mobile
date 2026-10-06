@@ -27,7 +27,8 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageProvider = avatarImageProvider ??
+    final imageProvider =
+        avatarImageProvider ??
         (avatarUrl != null ? NetworkImage(avatarUrl!) : null);
 
     final avatar = GestureDetector(
@@ -39,10 +40,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: imageProvider == null ? Colors.grey : null,
         backgroundImage: imageProvider,
         child: imageProvider == null
-            ? const Icon(
-                Icons.person,
-                color: Colors.white,
-              )
+            ? const Icon(Icons.person, color: Colors.white)
             : null,
       ),
     );
@@ -54,7 +52,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         color: Color(0xFF245B6B),
         fontSize: 22,
         fontWeight: FontWeight.w700,
-        height: 1.2
+        height: 1.2,
       ),
       textAlign: centerTitle ? TextAlign.center : TextAlign.left,
     );
@@ -64,11 +62,10 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (leading != null) Padding(padding: const EdgeInsets.only(left: 8.0), child: leading!),
-          Expanded(
-            child: Center(child: titleWidget),
-          ),
-          if (actions != null) ...actions!,
+          if (leading != null)
+            Padding(padding: const EdgeInsets.only(left: 8.0), child: leading!),
+          Expanded(child: Center(child: titleWidget)),
+          ...?actions,
           Padding(padding: const EdgeInsets.only(right: 8.0), child: avatar),
         ],
       ),

@@ -5,18 +5,13 @@ import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffo
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_card.dart';
 
 class ComparisonProsPage extends StatefulWidget {
-  const ComparisonProsPage({
-    required this.theme,
-    this.viewModel,
-    super.key,
-  });
+  const ComparisonProsPage({required this.theme, this.viewModel, super.key});
 
   final String theme;
   final ComparisonProsViewModel? viewModel;
 
   @override
-  State<ComparisonProsPage> createState() =>
-      _ComparisonProsPageState();
+  State<ComparisonProsPage> createState() => _ComparisonProsPageState();
 }
 
 class _ComparisonProsPageState extends State<ComparisonProsPage> {

@@ -6,9 +6,7 @@ import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/compar
 void main() {
   Future<void> openPage(WidgetTester tester) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: ComparisonProsPage(theme: 'Mudar de carreira'),
-      ),
+      const MaterialApp(home: ComparisonProsPage(theme: 'Mudar de carreira')),
     );
   }
 

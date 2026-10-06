@@ -202,64 +202,62 @@ void main() {
     expect(find.text('Comece sua primeira decisão'), findsOneWidget);
   });
 
-  testWidgets(
-    'continues to the pros page with the entered decision theme',
-    (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ComparisonStartPage(
-            viewModel: ComparisonStartViewModel(
-              repository: _FakeComparisonRepository(),
-            ),
+  testWidgets('continues to the pros page with the entered decision theme', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ComparisonStartPage(
+          viewModel: ComparisonStartViewModel(
+            repository: _FakeComparisonRepository(),
           ),
         ),
-      );
+      ),
+    );
 
-      await tester.tap(find.text('Nova comparação'));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField), 'Mudança de Carreira');
-      await tester.tap(find.text('Continuar'));
-      await tester.pumpAndSettle();
+    await tester.tap(find.text('Nova comparação'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Mudança de Carreira');
+    await tester.tap(find.text('Continuar'));
+    await tester.pumpAndSettle();
 
-      expect(find.text('Decisão Atual'), findsOneWidget);
-      expect(find.byType(LinearProgressIndicator), findsOneWidget);
-      final progressBar = tester.widget<LinearProgressIndicator>(
-        find.byType(LinearProgressIndicator),
-      );
-      expect(progressBar.value, 0.5);
-      expect(progressBar.minHeight, 3);
-      expect(find.text('Mudança de Carreira'), findsOneWidget);
-      expect(find.text('Adicionar Argumento Favorável'), findsOneWidget);
-      expect(find.text('O que pesa a favor dessa decisão?'), findsOneWidget);
-      expect(
-        find.text('Ex: Melhor salário, Novos desafios...'),
-        findsOneWidget,
-      );
+    expect(find.text('Decisão Atual'), findsOneWidget);
+    expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    final progressBar = tester.widget<LinearProgressIndicator>(
+      find.byType(LinearProgressIndicator),
+    );
+    expect(progressBar.value, 0.5);
+    expect(progressBar.minHeight, 3);
+    expect(find.text('Mudança de Carreira'), findsOneWidget);
+    expect(find.text('Adicionar Argumento Favorável'), findsOneWidget);
+    expect(find.text('O que pesa a favor dessa decisão?'), findsOneWidget);
+    expect(find.text('Ex: Melhor salário, Novos desafios...'), findsOneWidget);
 
-      final backButton = tester.widget<TextButton>(find.byType(TextButton));
-      final backButtonSize = tester.getSize(find.byType(TextButton));
-      final nextButtonSize = tester.getSize(find.byType(ElevatedButton));
-      expect(backButtonSize.width, nextButtonSize.width);
-      expect(backButtonSize.height, nextButtonSize.height);
-      expect(backButton.style?.side, isNull);
+    final backButton = tester.widget<TextButton>(find.byType(TextButton));
+    final backButtonSize = tester.getSize(find.byType(TextButton));
+    final nextButtonSize = tester.getSize(find.byType(ElevatedButton));
+    expect(backButtonSize.width, nextButtonSize.width);
+    expect(backButtonSize.height, nextButtonSize.height);
+    expect(backButton.style?.side, isNull);
 
-      await tester.tap(find.text('Próximo Passo'));
-      await tester.pumpAndSettle();
-      expect(find.text('Decisão Atual'), findsOneWidget);
+    await tester.tap(find.text('Próximo Passo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Decisão Atual'), findsOneWidget);
 
-      await tester.tap(find.text('Voltar'));
-      await tester.pumpAndSettle();
-      expect(find.text('Sobre o que é esta decisão?'), findsOneWidget);
-      expect(
-        tester.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator)).value,
-        0.25,
-      );
-      expect(
-        tester.widget<TextFormField>(find.byType(TextFormField)).controller?.text,
-        'Mudança de Carreira',
-      );
-    },
-  );
+    await tester.tap(find.text('Voltar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sobre o que é esta decisão?'), findsOneWidget);
+    expect(
+      tester
+          .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator))
+          .value,
+      0.25,
+    );
+    expect(
+      tester.widget<TextFormField>(find.byType(TextFormField)).controller?.text,
+      'Mudança de Carreira',
+    );
+  });
 }
 
 class _FakeComparisonRepository implements IComparisonRepository {

@@ -1,0 +1,75 @@
+name: CD
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: Validate release version
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate tag and commit
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo '::error::Expected a stable vX.Y.Z tag.'
+            exit 1
+          fi
+          APP_VERSION=$(sed -n 's/^version: *\([^+[:space:]]*\).*/\1/p' pubspec.yaml)
+          if [[ "${RELEASE_TAG#v}" != "$APP_VERSION" ]]; then
+            echo '::error::Tag must match pubspec.yaml.'
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo '::error::Release commit must belong to main.'
+            exit 1
+          fi
+
+  ci:
+    name: Validate and build release
+    needs: [version]
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+    uses: ./.github/workflows/ci.yml
+    with:
+      release: true
+    secrets:
+      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+  publish:
+    name: Publish Android APK
+    needs: [ci]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: android-apk
+          path: dist
+      - uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          files: dist/app-release.apk
+          fail_on_unmatched_files: true
+          overwrite_files: true
+          generate_release_notes: true
+          body: |
+            APK Android para testes, assinado com chave de debug.
+            A chave pode mudar entre execuções; reinstalação pode ser necessária.
