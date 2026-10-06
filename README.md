@@ -60,7 +60,7 @@ O arquivo de configuração local está excluído do controle de versão.
 ### Verificações
 
 ```bash
-dart format --output=none --set-exit-if-changed lib test
+dart format lib test
 flutter analyze --fatal-infos
 flutter test --coverage
 flutter build apk --release

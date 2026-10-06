@@ -84,6 +84,8 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
+      - name: Test TLS security rules
+        run: semgrep --test --config .github/security/dart-tls.yml .github/security/tests
       - name: Scan Dart code
         run: semgrep scan --config .github/security/dart-tls.yml --strict --error --metrics=off --disable-version-check --json --output semgrep.json lib
       - name: Save security report
