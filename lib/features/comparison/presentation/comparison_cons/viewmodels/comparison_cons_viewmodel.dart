@@ -12,4 +12,20 @@ class ComparisonConsViewModel extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+
+  bool updateCon(int index, String value) {
+    final argument = value.trim();
+    if (index < 0 || index >= _cons.length || argument.isEmpty) return false;
+    if (_cons[index] == argument) return true;
+    _cons[index] = argument;
+    notifyListeners();
+    return true;
+  }
+
+  bool removeCon(int index) {
+    if (index < 0 || index >= _cons.length) return false;
+    _cons.removeAt(index);
+    notifyListeners();
+    return true;
+  }
 }

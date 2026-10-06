@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
+
 import '../../comparison_cons/comparison_cons_arguments.dart';
 import '../../comparison_cons/viewmodels/comparison_cons_viewmodel.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
-import 'package:flutter/material.dart';
 import '../../widgets/comparison_arguments_body.dart';
 import '../viewmodels/comparison_pros_viewmodel.dart';
-import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
 
 class ComparisonProsPage extends StatefulWidget {
   const ComparisonProsPage({required this.theme, this.viewModel, super.key});
@@ -64,6 +65,8 @@ class _ComparisonProsPageState extends State<ComparisonProsPage> {
         controller: _controller,
         focusNode: _focusNode,
         onSubmitted: _submitPro,
+        onUpdate: _viewModel.updatePro,
+        onRemove: _viewModel.removePro,
         onBack: () => Navigator.pop(context),
         onNext: () => Navigator.pushNamed(
           context,

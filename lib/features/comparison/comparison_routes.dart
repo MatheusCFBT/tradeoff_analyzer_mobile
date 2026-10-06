@@ -1,13 +1,14 @@
-import 'presentation/comparison_cons/comparison_cons_arguments.dart';
-import 'presentation/comparison_cons/viewmodels/comparison_cons_viewmodel.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/views/comparison_cons_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/views/comparison_cons_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/viewmodels/comparison_pros_viewmodel.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/views/comparison_pros_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/viewmodels/comparison_start_viewmodel.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
+
+import 'presentation/comparison_cons/comparison_cons_arguments.dart';
+import 'presentation/comparison_cons/viewmodels/comparison_cons_viewmodel.dart';
 
 class ComparisonRoutes {
   static const String start = '/comparison/start';
