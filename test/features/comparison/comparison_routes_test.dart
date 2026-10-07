@@ -1,12 +1,13 @@
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/comparison_cons_arguments.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/viewmodels/comparison_cons_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/comparison_cons_arguments.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/viewmodels/comparison_cons_viewmodel.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/views/comparison_pros_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
 import 'package:tradeoff_analyzer_mobile/routers/app_routes.dart';
+
 import 'comparison_test_app.dart';
 
 void main() {

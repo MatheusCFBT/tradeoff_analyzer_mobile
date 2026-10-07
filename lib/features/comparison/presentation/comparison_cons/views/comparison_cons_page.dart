@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
+
 import '../../widgets/comparison_arguments_body.dart';
 import '../viewmodels/comparison_cons_viewmodel.dart';
 
@@ -65,6 +66,8 @@ class _ComparisonConsPageState extends State<ComparisonConsPage> {
         controller: _controller,
         focusNode: _focusNode,
         onSubmitted: _submitCon,
+        onUpdate: _viewModel.updateCon,
+        onRemove: _viewModel.removeCon,
         onBack: () => Navigator.pop(context),
         onNext: () {},
         isCons: true,

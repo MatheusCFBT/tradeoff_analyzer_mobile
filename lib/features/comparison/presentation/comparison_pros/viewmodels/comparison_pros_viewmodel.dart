@@ -12,4 +12,20 @@ class ComparisonProsViewModel extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+
+  bool updatePro(int index, String value) {
+    final argument = value.trim();
+    if (index < 0 || index >= _pros.length || argument.isEmpty) return false;
+    if (_pros[index] == argument) return true;
+    _pros[index] = argument;
+    notifyListeners();
+    return true;
+  }
+
+  bool removePro(int index) {
+    if (index < 0 || index >= _pros.length) return false;
+    _pros.removeAt(index);
+    notifyListeners();
+    return true;
+  }
 }

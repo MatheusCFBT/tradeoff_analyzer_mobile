@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_card.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 
+import 'argument_management_modals.dart';
+
 class ComparisonArgumentsBody extends StatelessWidget {
   const ComparisonArgumentsBody({
     required this.theme,
@@ -9,6 +11,8 @@ class ComparisonArgumentsBody extends StatelessWidget {
     required this.controller,
     required this.focusNode,
     required this.onSubmitted,
+    required this.onUpdate,
+    required this.onRemove,
     required this.onBack,
     required this.onNext,
     this.isCons = false,
@@ -19,9 +23,27 @@ class ComparisonArgumentsBody extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final ValueChanged<String> onSubmitted;
+  final bool Function(int index, String value) onUpdate;
+  final bool Function(int index) onRemove;
   final VoidCallback onBack;
   final VoidCallback onNext;
   final bool isCons;
+
+  Future<void> _manage(BuildContext context, int index) async {
+    final change = await showArgumentManagement(
+      context,
+      argument: arguments[index],
+    );
+    if (!context.mounted) return;
+    switch (change) {
+      case ArgumentEdited(:final text):
+        onUpdate(index, text);
+      case ArgumentRemoved():
+        onRemove(index);
+      case null:
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +68,11 @@ class ComparisonArgumentsBody extends StatelessWidget {
                   isCons: isCons,
                 ),
                 const SizedBox(height: 32),
-                _AddedArgumentsSection(arguments: arguments, isCons: isCons),
+                _AddedArgumentsSection(
+                  arguments: arguments,
+                  isCons: isCons,
+                  onTap: (index) => _manage(context, index),
+                ),
               ],
             ),
           ),
@@ -282,7 +308,12 @@ class _AddArgumentCard extends StatelessWidget {
 }
 
 class _AddedArgumentsSection extends StatelessWidget {
-  const _AddedArgumentsSection({required this.arguments, required this.isCons});
+  const _AddedArgumentsSection({
+    required this.arguments,
+    required this.isCons,
+    required this.onTap,
+  });
+  final ValueChanged<int> onTap;
   final bool isCons;
   final List<String> arguments;
   @override
@@ -323,47 +354,69 @@ class _AddedArgumentsSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        for (final argument in arguments)
-          _ArgumentCard(argument: argument, isCons: isCons),
+        for (var index = 0; index < arguments.length; index++)
+          _ArgumentCard(
+            argument: arguments[index],
+            isCons: isCons,
+            onTap: () => onTap(index),
+          ),
       ],
     );
   }
 }
 
 class _ArgumentCard extends StatelessWidget {
-  const _ArgumentCard({required this.argument, required this.isCons});
+  const _ArgumentCard({
+    required this.argument,
+    required this.isCons,
+    required this.onTap,
+  });
+  final VoidCallback onTap;
   final bool isCons;
   final String argument;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: AppCard(
-        padding: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          side: const BorderSide(color: Color(0xFFCFD9DE)),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              isCons ? Icons.cancel : Icons.check_circle,
-              size: 18,
-              color: isCons ? const Color(0xFFD71919) : const Color(0xFF004353),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                argument,
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                  color: Color(0xFF172126),
-                ),
+      child: Semantics(
+        button: true,
+        label: 'Gerenciar argumento',
+        child: AppCard(
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: const BorderSide(color: Color(0xFFCFD9DE)),
+          ),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    isCons ? Icons.cancel : Icons.check_circle,
+                    size: 18,
+                    color: isCons
+                        ? const Color(0xFFD71919)
+                        : const Color(0xFF004353),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      argument,
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 14,
+                        color: Color(0xFF172126),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

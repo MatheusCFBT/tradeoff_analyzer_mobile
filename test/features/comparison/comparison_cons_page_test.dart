@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
+
 import 'comparison_test_app.dart';
 
 void main() {
