@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/comparison_cons_arguments.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/viewmodels/comparison_cons_viewmodel.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/comparison_cons_route_arguments_model.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/models/comparison_draft_model.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_pros/views/comparison_pros_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_theme/views/comparison_theme_page.dart';
@@ -126,7 +126,9 @@ void main() {
       )!.settings;
       expect(consSettings.name, ComparisonRoutes.cons);
       expect(
-        (consSettings.arguments as ComparisonConsArguments).theme,
+        (consSettings.arguments as ComparisonConsRouteArgumentsModel)
+            .draft
+            .theme,
         'Mudança de Carreira',
       );
       await tester.tap(find.text('Voltar'));
@@ -183,11 +185,8 @@ void main() {
     testWidgets('cons validates typed theme and retains settings: "$theme"', (
       tester,
     ) async {
-      final viewModel = ComparisonConsViewModel();
-      addTearDown(viewModel.dispose);
-      final arguments = ComparisonConsArguments(
-        theme: theme,
-        viewModel: viewModel,
+      final arguments = ComparisonConsRouteArgumentsModel(
+        draft: ComparisonDraftModel(theme: theme),
       );
       await openApp(tester);
       Navigator.pushNamed(

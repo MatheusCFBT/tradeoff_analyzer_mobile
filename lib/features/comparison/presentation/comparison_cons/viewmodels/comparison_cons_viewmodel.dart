@@ -5,6 +5,13 @@ class ComparisonConsViewModel extends ChangeNotifier {
 
   List<String> get cons => List.unmodifiable(_cons);
 
+  void replaceCons(List<String> arguments) {
+    _cons
+      ..clear()
+      ..addAll(arguments);
+    notifyListeners();
+  }
+
   bool addCon(String value) {
     final argument = value.trim();
     if (argument.isEmpty) return false;

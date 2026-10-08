@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
+import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_card.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
+
+import '../../../models/comparison_navigation_result_model.dart';
 
 class ComparisonThemePage extends StatefulWidget {
   const ComparisonThemePage({required this.circleAvatar, super.key});
@@ -26,13 +28,19 @@ class _ComparisonThemePageState extends State<ComparisonThemePage> {
     super.dispose();
   }
 
-  void _handleContinue() {
+  Future<void> _handleContinue() async {
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
 
     final theme = _themeController.text.trim();
-    Navigator.pushNamed(context, ComparisonRoutes.pros, arguments: theme);
+    final result = await Navigator.pushNamed<ComparisonNavigationResultModel>(
+      context,
+      ComparisonRoutes.pros,
+      arguments: theme,
+    );
+    if (!mounted || result == null) return;
+    if (result.draft.theme != theme) _themeController.text = result.draft.theme;
   }
 
   @override

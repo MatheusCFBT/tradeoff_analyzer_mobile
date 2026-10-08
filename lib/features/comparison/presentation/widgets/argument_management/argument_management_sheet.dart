@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'argument_change.dart';
+import '../../../models/argument_change_model.dart';
 import 'argument_edit_sheet.dart';
 import 'argument_modal_routes.dart';
 import 'argument_removal_dialog.dart';
@@ -30,7 +30,7 @@ class _ArgumentManagementSheetState extends State<ArgumentManagementSheet> {
       ),
     );
     if (!mounted || updated == null) return;
-    Navigator.pop(context, ArgumentEdited(updated));
+    Navigator.pop(context, ArgumentEditedModel(updated));
   }
 
   Future<void> _remove() async {
@@ -41,7 +41,7 @@ class _ArgumentManagementSheetState extends State<ArgumentManagementSheet> {
       ),
     );
     if (!mounted || confirmed != true) return;
-    Navigator.pop(context, const ArgumentRemoved());
+    Navigator.pop(context, const ArgumentRemovedModel());
   }
 
   @override
