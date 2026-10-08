@@ -63,7 +63,7 @@ Future<void> openReview(WidgetTester tester) async {
 void main() {
   setUpComparisonApp();
 
-  testWidgets('reviews all arguments by category and disables finish', (
+  testWidgets('reviews all arguments by category and enables finish', (
     tester,
   ) async {
     await openReview(tester);
@@ -81,7 +81,7 @@ void main() {
       1,
     );
     final finish = find.widgetWithText(ElevatedButton, 'Finalizar Decisão');
-    expect(tester.widget<ElevatedButton>(finish).onPressed, isNull);
+    expect(tester.widget<ElevatedButton>(finish).onPressed, isNotNull);
     expect(
       ModalRoute.of(
         tester.element(find.text('Revisar Decisão')),

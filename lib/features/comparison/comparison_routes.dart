@@ -1,3 +1,5 @@
+import 'presentation/comparison_decision/views/comparison_decision_page.dart';
+import 'presentation/comparison_decision/viewmodels/comparison_decision_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_cons/views/comparison_cons_page.dart';
@@ -21,6 +23,7 @@ class ComparisonRoutes {
   static const String pros = '/comparison/pros';
   static const String cons = '/comparison/cons';
   static const String review = '/comparison/review';
+  static const String decision = '/comparison/decision';
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -34,13 +37,17 @@ class ComparisonRoutes {
         return _consRoute(settings);
       case review:
         return _reviewRoute(settings);
+      case decision:
+        return _decisionRoute(settings);
       default:
         return null;
     }
   }
 
-  static Route<void> _themeRoute(RouteSettings settings) {
-    return MaterialPageRoute<void>(
+  static Route<ComparisonNavigationResultModel> _themeRoute(
+    RouteSettings settings,
+  ) {
+    return MaterialPageRoute<ComparisonNavigationResultModel>(
       settings: settings,
       builder: (_) => const ComparisonThemePage(
         circleAvatar: CircleAvatar(
@@ -112,6 +119,22 @@ class ComparisonRoutes {
       builder: (_) => ComparisonReviewPage(
         arguments: arguments,
         viewModel: GetIt.instance.get<ComparisonReviewViewModel>(),
+      ),
+    );
+  }
+
+  static Route<ComparisonNavigationResultModel>? _decisionRoute(
+    RouteSettings settings,
+  ) {
+    final draft = settings.arguments;
+    if (draft is! ComparisonDraftModel || draft.theme.trim().isEmpty) {
+      return null;
+    }
+    return MaterialPageRoute<ComparisonNavigationResultModel>(
+      settings: settings,
+      builder: (_) => ComparisonDecisionPage(
+        draft: draft,
+        viewModel: GetIt.instance.get<ComparisonDecisionViewModel>(),
       ),
     );
   }
