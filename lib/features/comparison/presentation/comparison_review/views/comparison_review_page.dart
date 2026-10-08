@@ -85,6 +85,14 @@ class _ComparisonReviewPageState extends State<ComparisonReviewPage> {
     _viewModel.setDraft(result.draft);
   }
 
+  Future<void> _finish() async {
+    await Navigator.pushNamed(
+      context,
+      ComparisonRoutes.decision,
+      arguments: _viewModel.draft,
+    );
+  }
+
   @override
   void dispose() {
     _viewModel.removeListener(_refresh);
@@ -165,14 +173,14 @@ class _ComparisonReviewPageState extends State<ComparisonReviewPage> {
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(14, 8, 14, 12),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 8, 14, 12),
                     child: SizedBox(
                       width: double.infinity,
                       child: AppPrimaryButton(
                         label: 'Finalizar Decisão',
-                        icon: Icon(Icons.arrow_forward),
-                        onPressed: null,
+                        icon: const Icon(Icons.arrow_forward),
+                        onPressed: _finish,
                       ),
                     ),
                   ),
