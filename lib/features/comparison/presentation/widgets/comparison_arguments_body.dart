@@ -36,9 +36,9 @@ class ComparisonArgumentsBody extends StatelessWidget {
     );
     if (!context.mounted) return;
     switch (change) {
-      case ArgumentEdited(:final text):
+      case ArgumentEditedModel(:final text):
         onUpdate(index, text);
-      case ArgumentRemoved():
+      case ArgumentRemovedModel():
         onRemove(index);
       case null:
         break;

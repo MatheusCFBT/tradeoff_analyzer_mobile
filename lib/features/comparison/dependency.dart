@@ -9,9 +9,12 @@ import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/compar
 import 'package:tradeoff_analyzer_mobile/features/comparison/repositories/comparison_repository_impl.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/repositories/comparison_repository_interface.dart';
 
+import 'presentation/comparison_review/viewmodels/comparison_review_viewmodel.dart';
+
 void setupComparisonDependencies() {
   // TODO VERIFICAR SE É O MELHOR LIFETIME
   GetIt.instance
+    ..registerFactory(() => ComparisonReviewViewModel())
     ..registerFactory(() => ComparisonProsViewModel())
     ..registerFactory(() => ComparisonConsViewModel())
     ..registerFactory<IComparisonRemoteDataSource>(

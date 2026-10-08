@@ -5,6 +5,13 @@ class ComparisonProsViewModel extends ChangeNotifier {
 
   List<String> get pros => List.unmodifiable(_pros);
 
+  void replacePros(List<String> arguments) {
+    _pros
+      ..clear()
+      ..addAll(arguments);
+    notifyListeners();
+  }
+
   bool addPro(String value) {
     final argument = value.trim();
     if (argument.isEmpty) return false;

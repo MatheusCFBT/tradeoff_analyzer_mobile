@@ -2,7 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 
 class ArgumentEditSheet extends StatefulWidget {
-  const ArgumentEditSheet({super.key, required this.argument});
+  const ArgumentEditSheet({
+    super.key,
+    required this.argument,
+    this.title = 'Editar Argumento',
+    this.subtitle = 'Edite o texto do seu argumento',
+    this.label = 'Argumento',
+    this.emptyMessage = 'Informe o argumento.',
+  });
+  final String title;
+  final String subtitle;
+  final String label;
+  final String emptyMessage;
   final String argument;
 
   @override
@@ -50,8 +61,8 @@ class _ArgumentEditSheetState extends State<ArgumentEditSheet> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Editar Argumento',
+                  Text(
+                    widget.title,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 20,
@@ -60,8 +71,8 @@ class _ArgumentEditSheetState extends State<ArgumentEditSheet> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Edite o texto do seu argumento',
+                  Text(
+                    widget.subtitle,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
@@ -69,8 +80,8 @@ class _ArgumentEditSheetState extends State<ArgumentEditSheet> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Argumento',
+                  Text(
+                    widget.label,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 12,
@@ -85,7 +96,7 @@ class _ArgumentEditSheetState extends State<ArgumentEditSheet> {
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _save(),
                     validator: (value) => (value ?? '').trim().isEmpty
-                        ? 'Informe o argumento.'
+                        ? widget.emptyMessage
                         : null,
                     decoration: InputDecoration(
                       filled: true,
