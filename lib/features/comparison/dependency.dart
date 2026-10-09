@@ -15,7 +15,9 @@ import 'presentation/comparison_review/viewmodels/comparison_review_viewmodel.da
 void setupComparisonDependencies() {
   // TODO VERIFICAR SE É O MELHOR LIFETIME
   GetIt.instance
-    ..registerFactory(() => ComparisonDecisionViewModel())
+    ..registerFactory(
+      () => ComparisonDecisionViewModel(repository: GetIt.instance.get()),
+    )
     ..registerFactory(() => ComparisonReviewViewModel())
     ..registerFactory(() => ComparisonProsViewModel())
     ..registerFactory(() => ComparisonConsViewModel())

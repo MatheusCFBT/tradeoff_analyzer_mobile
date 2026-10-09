@@ -1,3 +1,5 @@
+import 'models/completed_comparison_model.dart';
+import 'presentation/comparison_completed/views/comparison_completed_page.dart';
 import 'presentation/comparison_decision/views/comparison_decision_page.dart';
 import 'presentation/comparison_decision/viewmodels/comparison_decision_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,7 @@ class ComparisonRoutes {
   static const String cons = '/comparison/cons';
   static const String review = '/comparison/review';
   static const String decision = '/comparison/decision';
+  static const String completed = '/comparison/completed';
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -37,6 +40,8 @@ class ComparisonRoutes {
         return _consRoute(settings);
       case review:
         return _reviewRoute(settings);
+      case completed:
+        return _completedRoute(settings);
       case decision:
         return _decisionRoute(settings);
       default:
@@ -136,6 +141,18 @@ class ComparisonRoutes {
         draft: draft,
         viewModel: GetIt.instance.get<ComparisonDecisionViewModel>(),
       ),
+    );
+  }
+
+  static Route<void>? _completedRoute(RouteSettings settings) {
+    final comparison = settings.arguments;
+    if (comparison is! CompletedComparisonModel ||
+        comparison.draft.theme.trim().isEmpty) {
+      return null;
+    }
+    return MaterialPageRoute<void>(
+      settings: settings,
+      builder: (_) => ComparisonCompletedPage(comparison: comparison),
     );
   }
 

@@ -1,3 +1,5 @@
+import '../../../comparison_routes.dart';
+import '../../../../../routers/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_base_scaffold.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_primary_button.dart';
@@ -27,7 +29,14 @@ class _ComparisonDecisionPageState extends State<ComparisonDecisionPage> {
 
   void _refresh() => setState(() {});
   void _confirm() {
-    widget.viewModel.confirm(widget.draft);
+    final completed = widget.viewModel.confirm(widget.draft);
+    if (completed == null) return;
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      ComparisonRoutes.completed,
+      (route) => route.settings.name == AppRoutes.home || route.isFirst,
+      arguments: completed,
+    );
   }
 
   @override
