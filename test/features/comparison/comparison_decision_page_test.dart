@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/repositories/comparison_repository_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/models/comparison_draft_model.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_start/views/comparison_start_page.dart';
 import 'package:tradeoff_analyzer_mobile/features/shared/widgets/app_text_field.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/models/comparison_model.dart';
-import 'package:tradeoff_analyzer_mobile/features/comparison/presentation/comparison_decision/views/comparison_decision_page.dart';
 import 'comparison_test_app.dart';
 
 Future<void> choose(WidgetTester tester, String label) async {
@@ -117,7 +118,9 @@ void main() {
   });
 
   for (final side in [SelectedSide.pros, SelectedSide.cons]) {
-    testWidgets('confirmation keeps decision open for $side', (tester) async {
+    testWidgets('confirmation saves and opens completion for $side', (
+      tester,
+    ) async {
       await openFinalStep(tester);
       await choose(
         tester,
@@ -126,29 +129,78 @@ void main() {
             : 'Pender para os Contras',
       );
       await confirm(tester);
-      expect(find.byType(ComparisonDecisionPage), findsOneWidget);
-      expect(find.text('Qual lado tem mais peso?'), findsOneWidget);
-      final page = tester.widget<ComparisonDecisionPage>(
-        find.byType(ComparisonDecisionPage),
-      );
-      expect(page.viewModel.completedComparison!.selectedSide, side);
+      expect(find.text('Decisão tomada com clareza!'), findsOneWidget);
       expect(
-        page.viewModel.completedComparison!.draft.theme,
-        'Mudança de Carreira',
+        find.text(
+          side == SelectedSide.pros
+              ? 'Pender para prós'
+              : 'Pender para contras',
+        ),
+        findsOneWidget,
       );
+      expect(find.text('Ver no Histórico'), findsNothing);
       expect(
-        tester
-            .widget<ElevatedButton>(
-              find.widgetWithText(ElevatedButton, 'Confirmar Decisão'),
-            )
-            .onPressed,
-        isNull,
+        find.textContaining('nesta sessão', findRichText: true),
+        findsOneWidget,
       );
+      final saved = GetIt.instance
+          .get<IComparisonRepository>()
+          .getLastCompletedComparison();
+      expect(saved!.selectedSide, side);
+      expect(saved.draft.theme, 'Mudança de Carreira');
+      final settings = ModalRoute.of(
+        tester.element(find.text('Decisão tomada com clareza!')),
+      )!.settings;
+      expect(settings.name, '/comparison/completed');
+      expect(settings.arguments, same(saved));
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      expect(find.text('Revisar Decisão'), findsOneWidget);
+      expect(find.byType(ComparisonStartPage), findsOneWidget);
+      expect(find.text('Revisar Decisão'), findsNothing);
     });
   }
+
+  testWidgets('new comparison clears the flow but retains the saved result', (
+    tester,
+  ) async {
+    await openFinalStep(tester);
+    await choose(tester, 'Pender para os Prós');
+    await confirm(tester);
+    final repository = GetIt.instance.get<IComparisonRepository>();
+    final saved = repository.getLastCompletedComparison();
+    await tester.tap(find.text('Nova Comparação'));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<TextFormField>(find.byType(TextFormField)).controller!.text,
+      isEmpty,
+    );
+    await tester.enterText(find.byType(AppTextField), 'Outra decisão');
+    await tester.tap(find.text('Continuar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Prós Adicionados'), findsOneWidget);
+    await nextStep(tester);
+    await nextStep(tester);
+    await tester.tap(find.text('Finalizar Decisão'));
+    await tester.pumpAndSettle();
+    expect(find.text('0 argumentos favoráveis'), findsOneWidget);
+    expect(find.text('0 argumentos desfavoráveis'), findsOneWidget);
+    expect(repository.getLastCompletedComparison(), same(saved));
+    await choose(tester, 'Pender para os Contras');
+    await confirm(tester);
+    expect(
+      repository.getLastCompletedComparison()!.draft.theme,
+      'Outra decisão',
+    );
+    expect(
+      repository.getLastCompletedComparison()!.selectedSide,
+      SelectedSide.cons,
+    );
+    await tester.tap(find.text('Nova Comparação'));
+    await tester.pumpAndSettle();
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.byType(ComparisonStartPage), findsOneWidget);
+  });
 
   for (final invalid in <Object?>[
     null,
@@ -187,9 +239,10 @@ void main() {
     );
     await tester.pumpAndSettle();
     await choose(tester, 'Pender para os Contras');
-    await tester.ensureVisible(find.text('Confirmar Decisão'));
+    await confirm(tester);
+    await tester.ensureVisible(find.text('Nova Comparação'));
     await tester.pumpAndSettle();
-    expect(find.text('Confirmar Decisão').hitTestable(), findsOneWidget);
+    expect(find.text('Nova Comparação').hitTestable(), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

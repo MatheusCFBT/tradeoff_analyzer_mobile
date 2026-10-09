@@ -1,3 +1,5 @@
+import 'package:tradeoff_analyzer_mobile/features/comparison/models/completed_comparison_model.dart';
+import 'package:tradeoff_analyzer_mobile/features/comparison/models/comparison_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tradeoff_analyzer_mobile/features/comparison/comparison_routes.dart';
@@ -12,6 +14,43 @@ import 'comparison_test_app.dart';
 
 void main() {
   setUpComparisonApp();
+  for (final argument in <Object?>[
+    null,
+    42,
+    ComparisonDraftModel(theme: 'Tema'),
+    CompletedComparisonModel(
+      draft: ComparisonDraftModel(theme: '   '),
+      selectedSide: SelectedSide.pros,
+    ),
+    CompletedComparisonModel(
+      draft: ComparisonDraftModel(theme: 'Tema'),
+      selectedSide: SelectedSide.cons,
+    ),
+  ]) {
+    testWidgets(
+      'completed validates arguments and preserves settings: $argument',
+      (tester) async {
+        await openApp(tester);
+        Navigator.pushNamed(
+          tester.element(find.byType(ComparisonStartPage)),
+          '/comparison/completed',
+          arguments: argument,
+        );
+        await tester.pumpAndSettle();
+        final valid =
+            argument is CompletedComparisonModel &&
+            argument.draft.theme.trim().isNotEmpty;
+        final content = find.text(
+          valid ? 'Decisão tomada com clareza!' : 'Rota não encontrada',
+        );
+        expect(content, findsOneWidget);
+        final settings = ModalRoute.of(tester.element(content))!.settings;
+        expect(settings.name, '/comparison/completed');
+        expect(settings.arguments, same(argument));
+      },
+    );
+  }
+
   testWidgets('home preserves its named route settings', (tester) async {
     await openApp(tester);
     expect(find.text('Comece sua primeira decisão'), findsOneWidget);
